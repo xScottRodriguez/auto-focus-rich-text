@@ -42,14 +42,16 @@ export const Container = ({
       )}${transWithoutLineBreaks} `;
 
       setContent(updatedNotas);
-      const editorInstance = editor.current.getEditor();
-      setTimeout(() => {
-        editorInstance.setSelection(
-          content.length + transcription.length,
-          content.length + transcription.length
-        );
-      }, 3);
+      const editorInstance = editor;
+      console.log(editorInstance)
+      // setTimeout(() => {
+      //   editorInstance.setSelectionEnd(
+      //     content.length + transcription.length,
+      //     content.length + transcription.length
+      //   );
+      // }, 3);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcription]);
 
   useEffect(() => {

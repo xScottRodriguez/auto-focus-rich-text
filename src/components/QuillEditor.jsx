@@ -1,17 +1,25 @@
 /** @format */
 import "react-quill/dist/quill.snow.css";
 import ReactProptypes from "prop-types";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import QuillToolbar, { formats, modules } from "./EditorToolBar";
 
-export const QuillEditor = ({ transcription }) => {
+export const QuillEditor = ({
+  transcription,
+  listening,
+  stopListening,
+  startListening,
+}) => {
   const editor = useRef();
   const [editorData, setEditorData] = useState(transcription);
 
   useEffect(() => {
-    setEditorData(editorData.replaceAll(/<\/?p>/g, " ") + " " + transcription);
-
+    const updatedContent = `${editorData.replaceAll(
+      /<\/?p>/g,
+      " "
+    )} ${transcription}`;
+    setEditorData(updatedContent);
     const editorInstance = editor.current.getEditor();
     setTimeout(() => {
       editorInstance.setSelection(
@@ -19,17 +27,24 @@ export const QuillEditor = ({ transcription }) => {
         editorData.length + transcription.length
       );
     }, 3);
-    // setTimeout(() => quill.setSelection(length, length), 0); }, [transcription]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcription]);
 
   return (
     <div className="text-editor">
-      <h3>asd</h3>
+      {listening ? (
+        <button style={{marginBottom:20}} onClick={stopListening}>Stop</button>
+      ) : (
+        <button style={{marginBottom:20}} onClick={startListening}>Start</button>
+      )}
       <QuillToolbar />
       <ReactQuill
+        className="quill-editor"
+        style={{ height: "100%" }}
         ref={editor}
         theme="snow"
         value={editorData}
+        onChange={setEditorData}
         placeholder={"Write something awesome..."}
         modules={modules}
         formats={formats}
